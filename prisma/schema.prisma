@@ -10,25 +10,112 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  name  String
-  blerth  Int @default(1000)
-  image String
-  sessions Session[]
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String
+  name      String
+  blerth    Int        @default(1000)
+  image     String
+  createdAt DateTime   @default(now()) @db.Timestamptz
+  updateAt  DateTime   @default(now()) @db.Timestamptz
+  sessions  Session[]
+  duelUser  DuelUser[]
+
   @@map("users")
 }
 
 model Session {
-  id Int @id @default(autoincrement())
-  userId Int
-  token String
-  user User @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  token     String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updateAt  DateTime @default(now()) @db.Timestamptz
 
   @@map("sessions")
 }
 
+model Tournaments {
+  id         Int       @id @default(autoincrement())
+  name       String
+  startedAt  DateTime  @db.Timestamptz
+  finishedAt DateTime? @db.Timestamptz
+  apiId      Int       @unique
+  Matches    Matches[]
 
+  @@map("tournaments")
+}
+
+model Matches {
+  id              Int            @id @default(autoincrement())
+  apiTournamentId Int
+  tournament      Tournaments    @relation(fields: [apiTournamentId], references: [apiId])
+  name            String
+  apiMatchesId    Int            @unique
+  matchesTeam     MatchesTeams[] 
+  duel Duel[]
+  startedAt  DateTime  @db.Timestamptz
+  finishedAt DateTime? @db.Timestamptz
+
+  leftTeamOdd Float
+
+  rightTeamOdd Float
+
+  result    Int      @default(0)
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @default(now()) @db.Timestamptz
+
+  
+
+  @@map("matches")
+}
+
+model Teams {
+  id           Int            @id @default(autoincrement())
+  name         String
+  logo         String
+  apiTeamId    Int            @unique
+  matchesTeams MatchesTeams[]
+  duelUser     DuelUser[]
+
+  @@map("teams")
+}
+
+model MatchesTeams {
+  id      Int     @id @default(autoincrement())
+  matchId Int
+  match   Matches? @relation(fields: [matchId], references: [apiMatchesId], onDelete: Cascade)
+  teamId  Int
+  team    Teams   @relation(fields: [teamId], references: [apiTeamId])
+
+
+  @@unique(fields: [teamId, matchId], name: "opponents")
+  @@map("matchesTeams")
+}
+
+model Duel {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now()) @db.Timestamptz
+  updateAt  DateTime   @default(now()) @db.Timestamptz
+  matchId Int
+  match   Matches? @relation(fields: [matchId], references: [apiMatchesId])
+  duelUser  DuelUser[]
+
+  @@map("duels")
+}
+
+model DuelUser {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  duelId    Int
+  duel      Duel     @relation(fields: [duelId], references: [id])
+  bet       Int
+  teamId    Int
+  team      Teams    @relation(fields: [teamId], references: [id])
+  createdAt DateTime @default(now()) @db.Timestamptz
+  
+
+  @@map("duelUser")
+}
