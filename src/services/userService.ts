@@ -18,8 +18,14 @@ export async function signIn(user: LoginUserData){
   const token = uuid();
   await userRepository.createSession(token, userDb.id);
   
-  return { token: token, user: userDb.name };
+  return { token: token, user: {name : userDb.name, image : userDb.image, blerth : userDb.blerth} };
   
+}
+
+export async function findByToken(token : string){
+  const user = await userRepository.findUniqueByToken(token)
+  return user
+
 }
 
 

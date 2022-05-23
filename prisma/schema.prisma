@@ -28,7 +28,7 @@ model User {
 model Session {
   id        Int      @id @default(autoincrement())
   userId    Int
-  token     String
+  token     String @unique
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now()) @db.Timestamptz
   updateAt  DateTime @default(now()) @db.Timestamptz
@@ -85,7 +85,7 @@ model Teams {
 model MatchesTeams {
   id      Int     @id @default(autoincrement())
   matchId Int
-  match   Matches? @relation(fields: [matchId], references: [apiMatchesId], onDelete: Cascade)
+  match   Matches @relation(fields: [matchId], references: [apiMatchesId], onDelete: Cascade)
   teamId  Int
   team    Teams   @relation(fields: [teamId], references: [apiTeamId])
 
@@ -98,8 +98,8 @@ model Duel {
   id        Int        @id @default(autoincrement())
   createdAt DateTime   @default(now()) @db.Timestamptz
   updateAt  DateTime   @default(now()) @db.Timestamptz
-  matchId Int
-  match   Matches? @relation(fields: [matchId], references: [apiMatchesId])
+  matchId Int 
+  match   Matches @relation(fields: [matchId], references: [id])
   duelUser  DuelUser[]
 
   @@map("duels")
@@ -116,6 +116,5 @@ model DuelUser {
   team      Teams    @relation(fields: [teamId], references: [id])
   createdAt DateTime @default(now()) @db.Timestamptz
   
-
   @@map("duelUser")
 }

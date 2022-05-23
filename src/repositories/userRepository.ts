@@ -10,6 +10,22 @@ export async function findUniqueByEmail(email : string){
     email
   }})
 }
+export async function findUniqueById(id : number){
+  return await prisma.user.findUnique({where : {
+    id
+  },
+select : {
+  blerth : true
+}})
+}
+export async function findUniqueByToken(token : string){
+  return await prisma.session.findUnique({where : {
+    token
+  },
+select : {
+  userId : true
+}})
+}
 
 export async function insert(user : CreateUserData){
   return await prisma.user.create({
