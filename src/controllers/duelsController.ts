@@ -7,6 +7,10 @@ export async function get(req: Request, res: Response){
   const tournaments = await matchesService.get()
   res.send(tournaments)
 }
+export async function findAll(req: Request, res: Response){
+  const duels = await duelsService.findAll()
+  res.send(duels)
+}
 export async function getMatch(req: Request, res: Response){
   const {id} = req.params
   const match = await matchesService.getMatchInfoForDuel(Number(id))

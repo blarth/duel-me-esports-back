@@ -11,10 +11,20 @@ export async function insert(matchId : number){
     }
   })
 }
-export async function insertRelation(data : CreateDuelRelation){
-  return await prisma.duelUser.create({
+export async function insertRelation(data : CreateDuelRelation, id:number, bet : number){
+  return await prisma.$transaction([prisma.duelUser.create({
     data
-  })
+  }), prisma.user.update({
+    where : {
+      id
+    },
+    data : {
+      blerth : {
+        decrement : bet
+      }
+    }
+  })])
+  
 }
 
 export async function findUniqueById(id: number) {
@@ -27,8 +37,6 @@ export async function findUniqueById(id: number) {
         select : {
           id : true,
           startedAt : true,
-          leftTeamOdd : true,
-          rightTeamOdd : true,
           matchesTeam : {
             select : {
               team : {
@@ -36,13 +44,43 @@ export async function findUniqueById(id: number) {
                   id : true,
                   name : true,
                   logo : true,
-
+                  duelUser : {
+                    select : {user : {
+                      select : {
+                        id : true,
+                        name : true,
+                        image : true,
+                      }
+                    },
+                    bet : true,
+                    teamId : true}
+                  }
                 }
-              }
+              },
+              odd : true
             }
           }
         }
       },
+      duelUser : {
+        select : {user : {
+          select : {
+            id : true,
+            name : true,
+            image : true,
+          }
+        },
+        bet : true,
+        teamId : true}
+      }    
+    }
+  })
+}
+
+export async function findAll(){
+  return await prisma.duel.findMany({
+    select : {
+      id : true,
       duelUser : {
         select : {
           user : {
@@ -56,20 +94,43 @@ export async function findUniqueById(id: number) {
           teamId : true
         }
       }
-      
     }
   })
 }
 
-export async function deductBlerths(id:number, bet : number) {
-  return prisma.user.update({
-    where : {
-      id
-    },
-    data : {
-      blerth : {
-        decrement : bet
+export async function openDuels(userId : number, bet : number, duelId : number){
+  return prisma.$transaction([
+    prisma.user.update({
+      where : {
+        id : userId
+      },
+      data : {
+        blerth : {
+          increment : bet
+        }
       }
-    }
-  })
+    }),
+    prisma.duel.delete({
+      where : {
+        id : duelId
+      }
+    })
+  ])
+}
+
+export async function update(userId : number, bet : number){
+  
+    return await prisma.$transaction([
+      prisma.user.update({
+        where : {
+          id : userId
+        },
+        data : {
+          blerth : {
+            increment : bet 
+          }
+        }
+      })
+    ])
+  
 }

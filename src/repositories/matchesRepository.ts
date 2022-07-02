@@ -9,6 +9,7 @@ export async function findAll(){
     select : {
       id : true,
       name :true,
+      finishedAt : true,
       Matches : {
         select : {
           id : true,
@@ -16,12 +17,11 @@ export async function findAll(){
           name : true,
           apiMatchesId : true,
           startedAt : true,
-          leftTeamOdd : true,
-          rightTeamOdd : true,
           matchesTeam : {
             select : {
               matchId : true,
               teamId : true,
+              odd : true,
               team : {
                 select : {
                   name : true,
@@ -50,8 +50,6 @@ export async function findUniqueById(id : number) {
       id : true,
       name : true,
       startedAt : true,
-      leftTeamOdd : true,
-      rightTeamOdd : true,
       matchesTeam : {
         select : {
           team : {
@@ -60,7 +58,8 @@ export async function findUniqueById(id : number) {
               name : true,
               logo : true
             }
-          }
+          },
+          odd : true
         }
       }
     }
