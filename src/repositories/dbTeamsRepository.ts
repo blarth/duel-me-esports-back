@@ -23,7 +23,8 @@ export async function createRelation(matchesTeamsData: CreateDataMatchesTeams) {
     update : {},
     create : {
       matchId : matchesTeamsData.matchId,
-      teamId : matchesTeamsData.teamId
+      teamId : matchesTeamsData.teamId,
+      odd : matchesTeamsData.odd
     }
   })
 }

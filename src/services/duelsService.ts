@@ -1,19 +1,23 @@
+import dayjs from "dayjs"
 import * as duelsRepository from "../repositories/duelsRepository.js"
 import * as userRepository from "../repositories/userRepository.js"
+import * as matchesRepository from "../repositories/matchesRepository.js"
 import { badRequest, conflictError } from "../utils/errorUtils.js"
 
 export async function create({matchId, userId, teamId, bet}){
   await validateBalance(userId, bet)
-  try {
-    const duel = await duelsRepository.insert(matchId)
-    const duelId = duel.id
-    await duelsRepository.insertRelation({userId, teamId, bet, duelId})
-    await duelsRepository.deductBlerths(userId, bet)
-    return duelId
-  } catch (error) {
-    console.log(error)
-  }
+  const match = await matchesRepository.findUniqueById(matchId)
+  validateMatch(match)
+  
+    const {id} = await duelsRepository.insert(matchId)
+    await duelsRepository.insertRelation({userId, teamId, bet, duelId : id}, userId, bet)
+    return id
  
+}
+
+export async function findAll(){
+  const duels = await duelsRepository.findAll()
+  return duels
 }
 
 async function validateBalance(id: number, bet: number) {
@@ -30,22 +34,23 @@ export async function findUniqueById(id : number){
 
 export async function postDuel(id:number, userId: number, bet : number, teamId : number) {
   await validateBalance(userId, bet)
-  try {
     const duel = await duelsRepository.findUniqueById(id)
-    validateDuel(duel.duelUser, userId)
-    console.log({userId, teamId, bet, duelId : id})
-    await duelsRepository.insertRelation({userId, teamId, bet, duelId : id})
-    await duelsRepository.deductBlerths(userId, bet)
+    const arrDuelist = duel.duelUser
+    validateMatch(duel.match)
+    validateDuel(arrDuelist, userId)
+    await duelsRepository.insertRelation({userId, teamId, bet, duelId : id}, userId, bet)
     return 
-  } catch (error) {
-    console.log(error)
-  }
 }
 
+
+
 function validateDuel(arrDuelist ,userId){
-  console.log(arrDuelist)
-  console.log(arrDuelist.filter(duelist => duelist.user.id === userId))
   if(arrDuelist.filter(duelist => duelist.user.id === userId).length > 0) throw conflictError("Você não pode duelar consigo mesmo neh!")
   if(arrDuelist.length > 1) throw badRequest("Alguém ja pegou a vaga desse duelo =(")
+  return
+}
+
+function validateMatch(match : any){
+  if(dayjs().isAfter(dayjs(match.startedAt))) throw badRequest("Essa partida ja começou =(")
   return
 }

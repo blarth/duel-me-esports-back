@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "matchesTeams" ALTER COLUMN "odd" SET DATA TYPE DOUBLE PRECISION;

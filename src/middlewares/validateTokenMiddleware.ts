@@ -9,11 +9,8 @@ export default async function validateTokenMiddleware(req: Request, res: Respons
   if(!token) throw error.unauthorizedError("Token is required");
   const {userId} = await userRepository.findUniqueByToken(token);
   if(!userId) throw error.unauthorizedError("Token is invalid");
-  try {
+  
     res.locals.userId = userId ;
-  } catch (error) {
-    console.log(error)
-  }
   next()
 }
  

@@ -18,6 +18,11 @@ duelsRouter.get(
   validateTokenMiddleware,
   duelsController.findUnique  
 )
+duelsRouter.get(
+  '/duels',
+  validateTokenMiddleware,
+  duelsController.findAll  
+)
 duelsRouter.post(
   '/duel/:id',
   validateTokenMiddleware,

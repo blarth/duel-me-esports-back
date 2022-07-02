@@ -18,8 +18,6 @@ export async function create(dataMatch: CreateDataMatches) {
       name: dataMatch.name,
       startedAt: dataMatch.startedAt,
       finishedAt: dataMatch.finishedAt,
-      leftTeamOdd : dataMatch.leftTeamOdd,
-      rightTeamOdd : dataMatch.rightTeamOdd,
       result : dataMatch.result,
     }
   })
@@ -32,6 +30,21 @@ export async function update(result: number, finishedAt : any,id : number) {
     data : {
       result,
       finishedAt
+    },
+    select : {
+      id : true,
+      result : true,
+      matchesTeam : {
+        select : {
+          teamId : true,
+          team : {
+            select : {
+              id : true
+            }
+          }
+        }
+      }
+      
     }
   })
 }
@@ -43,7 +56,7 @@ export async function findAllByTournament(id: number) {
     }
   })
 }
-export async function findAllFinished() {
+export async function findAll() {
   return await prisma.matches.findMany({
   })
 }
@@ -67,13 +80,14 @@ export async function FindAllDuelsByMatchId(id : number){
       }
     },
     select : {
+      id : true,
       duelUser : {
         select : {
           teamId : true,
           bet : true,
           userId : true
         }
-      }
+      },
     }
 
   })

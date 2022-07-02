@@ -57,11 +57,6 @@ model Matches {
   duel Duel[]
   startedAt  DateTime  @db.Timestamptz
   finishedAt DateTime? @db.Timestamptz
-
-  leftTeamOdd Float
-
-  rightTeamOdd Float
-
   result    Int      @default(0)
   createdAt DateTime @default(now()) @db.Timestamptz
   updatedAt DateTime @default(now()) @db.Timestamptz
@@ -88,7 +83,7 @@ model MatchesTeams {
   match   Matches @relation(fields: [matchId], references: [apiMatchesId], onDelete: Cascade)
   teamId  Int
   team    Teams   @relation(fields: [teamId], references: [apiTeamId])
-
+  odd Float 
 
   @@unique(fields: [teamId, matchId], name: "opponents")
   @@map("matchesTeams")
@@ -110,7 +105,7 @@ model DuelUser {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   duelId    Int
-  duel      Duel     @relation(fields: [duelId], references: [id])
+  duel      Duel     @relation(fields: [duelId], references: [id], onDelete: Cascade)
   bet       Int
   teamId    Int
   team      Teams    @relation(fields: [teamId], references: [id])
