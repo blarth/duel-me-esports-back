@@ -1,0 +1,16 @@
+
+import * as duelUserRepository from "../repositories/duelUserRepository.js"
+
+export async function findAllGivenId(id : number){
+  const duels = await duelUserRepository.findAllGivenId(id)
+  const duelsUpcoming = duels.filter(el => el.duel.match.result === 0)
+  const duelsLost = duels.filter(el => el.duel.match.result === el.team.id)
+  const duelsWon = duels.filter(el => el.duel.match.result !== el.team.id && el.duel.match.result !== 0)
+  
+  const duelsMapped = {
+      duelsUpcoming,
+      duelsLost,
+      duelsWon
+  }
+  return duelsMapped
+}

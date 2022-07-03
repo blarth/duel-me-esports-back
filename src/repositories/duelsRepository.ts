@@ -98,6 +98,7 @@ export async function findAll(){
   })
 }
 
+
 export async function openDuels(userId : number, bet : number, duelId : number){
   return prisma.$transaction([
     prisma.user.update({
