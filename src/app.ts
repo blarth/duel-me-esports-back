@@ -11,8 +11,6 @@ app.use(cors())
 app.use(express.json())
 app.use(router)
 
-console.log("Hello Leite")
-
 if (process.env.NODE_ENV === 'tests') {
   app.use(testsRouter)
 }
