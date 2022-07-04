@@ -14,3 +14,9 @@ export async function findAllGivenId(id : number){
   }
   return duelsMapped
 }
+
+export async function findAll(){
+  const duels = await duelUserRepository.findAll()
+  const duelsFiltered = duels.filter(el => el.duelUser.length < 2)
+  return duelsFiltered
+}
