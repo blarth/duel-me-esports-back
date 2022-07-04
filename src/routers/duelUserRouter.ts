@@ -11,4 +11,6 @@ duelUserRouter.get(
   duelUserController.findAllGivenId  
 )
 
+duelUserRouter.get('/duelUser', duelUserController.findAll)
+
 export default duelUserRouter
