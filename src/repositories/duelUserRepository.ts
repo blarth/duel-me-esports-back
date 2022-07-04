@@ -56,31 +56,5 @@ export async function findAll(){
       },
       id : true
     }
-    /* select : {
-          user : {
-            select : {
-              id : true,
-              name : true,
-              image : true,
-            }
-          },
-          duel : {
-            select : {
-              match : {
-                select : {
-                  result : true
-                }
-              }
-            }
-          },
-          bet : true,
-          duelId : true,
-          team : {
-            select : {
-              id : true,
-              logo : true
-            }
-          }
-    } */
   })
 }
