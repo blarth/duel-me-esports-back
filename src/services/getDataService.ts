@@ -163,6 +163,8 @@ async function getDataResult() {
     openDuels.forEach(async (duel) => {
       const amount = duel.duelUser.reduce((total, acc) => total + acc.bet, 0)
       const winner = duel.duelUser.find((duelist) => duelist.teamId === id)
+      console.log(winner)
+      console.log(amount)
       await duelsRepository.update(winner.userId, amount)
     })
   }
