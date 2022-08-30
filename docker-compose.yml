@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:13
+    container_name: db
+    restart: always #container reinicia se morrer
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=8438132
+      - POSTGRES_DB=duel-me-esport-2
+    networks:
+      - duel-me-e-sports-network
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile #Dockerfile do node se encontra na pasta atual
+    command: bash -c "npx prisma generate && npx nodemon src/server.ts"
+    ports:
+      - 5000:5000
+    depends_on:
+      - db # só sobe quando o postgres tiver no ar
+    environment:
+      - DATABASE_URL=postgres://postgres:8438132@db:5432/duel-me-esport
+    networks:
+      - duel-me-e-sports-network
+    
+volumes:
+  postgres:
+networks:
+  duel-me-e-sports-network:
+    driver: bridge
