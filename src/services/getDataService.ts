@@ -94,7 +94,7 @@ export async function getDataResultMatch(req: Request, res: Response) {
 export async function getDataTournament(req: Request, res: Response) {
   const response = await axios.get(
     `
-    https://api.pandascore.co/dota2/tournaments?filter[tier]=s,a,b`,
+    https://api.pandascore.co/lol/tournaments?filter[tier]=s,a,b`,
     createConfig(process.env.MY_API_KEY)
   )
   
