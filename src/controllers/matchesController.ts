@@ -9,7 +9,7 @@ export async function get(_req: Request, res: Response){
 }
 export async function getByUniqueId(req: Request, res: Response){
   const {id} = req.params
-  const tournaments = await matchesService.getByUniqueId(id)
+  const tournaments = await matchesService.getByUniqueId(Number(id))
   
   res.send(tournaments)
 }
