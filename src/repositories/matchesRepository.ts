@@ -73,9 +73,6 @@ export async function findUniqueIdTournament(id){
         
       }
     },
-    orderBy : {
-        startedAt : "asc"
-    }
   })
 }
 
