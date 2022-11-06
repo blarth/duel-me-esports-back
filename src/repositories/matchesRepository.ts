@@ -40,10 +40,9 @@ export async function findAll(){
   })
 }
 export async function findUniqueIdTournament(id){
-  return await prisma.tournaments.findMany({
+  return await prisma.tournaments.findUnique({
     where : {
       id,
-      NOT : [{finishedAt : null}] 
     },
 
     select : {
