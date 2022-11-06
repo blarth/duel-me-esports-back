@@ -39,6 +39,46 @@ export async function findAll(){
     }
   })
 }
+export async function findUniqueIdTournament(id){
+  return await prisma.tournaments.findMany({
+    where : {
+      id,
+      NOT : [{finishedAt : null}] 
+    },
+
+    select : {
+      id : true,
+      name :true,
+      finishedAt : true,
+      Matches : {
+        select : {
+          id : true,
+          apiTournamentId : true,
+          name : true,
+          apiMatchesId : true,
+          startedAt : true,
+          matchesTeam : {
+            select : {
+              matchId : true,
+              teamId : true,
+              odd : true,
+              team : {
+                select : {
+                  name : true,
+                  logo : true
+                }
+              }
+            }
+          }
+        },
+        
+      }
+    },
+    orderBy : {
+        startedAt : "asc"
+    }
+  })
+}
 
 
 export async function findUniqueById(id : number) {

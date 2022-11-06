@@ -35,6 +35,5 @@ export async function postDuel(req : Request, res : Response){
   const {userId} = res.locals
   const {teamId, bet} = req.body
   await duelsService.postDuel(Number(id), userId, bet, teamId)
-  
   res.send(id).status(200)
 }

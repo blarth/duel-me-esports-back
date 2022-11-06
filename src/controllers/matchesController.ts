@@ -7,6 +7,12 @@ export async function get(_req: Request, res: Response){
   
   res.send(tournaments)
 }
+export async function getByUniqueId(req: Request, res: Response){
+  const {id} = req.params
+  const tournaments = await matchesService.getByUniqueId(id)
+  
+  res.send(tournaments)
+}
 export async function getMatch(req: Request, res: Response){
   const {id} = req.params
   const match = await matchesService.getMatchInfoForDuel(Number(id))

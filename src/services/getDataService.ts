@@ -53,7 +53,6 @@ export async function getDataUpcoming() {
       }
       await dbMatchesRepository.create(data)
       const teams = match.opponents.map((team) => {
-        console.log(team)
         return {
           apiTeamId: team.opponent.id,
           name: team.opponent.name,
@@ -94,7 +93,7 @@ export async function getDataResultMatch(req: Request, res: Response) {
 export async function getDataTournament(req: Request, res: Response) {
   const response = await axios.get(
     `
-    https://api.pandascore.co/csgo/tournaments?filter[tier]=s,a`,
+    https://api.pandascore.co/lol/tournaments?filter[tier]=s,a`,
     createConfig(process.env.MY_API_KEY)
   )
   
@@ -129,6 +128,7 @@ async function setIntervalUpdate() {
 
 async function getDataResult() {
   const matches = await dbMatchesRepository.findAll()
+  
   const filteredMatches = matches.filter(
     (match) =>
       dayjs().isAfter(dayjs(match.startedAt)) && match.finishedAt === null
