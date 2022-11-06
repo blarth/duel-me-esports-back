@@ -54,7 +54,12 @@ export async function findAll(){
           },
         }
       },
-      id : true
+      id : true,
+      match : {
+        select : {
+          finishedAt : true
+        }
+      }
     }
   })
 }

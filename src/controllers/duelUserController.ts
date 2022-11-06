@@ -3,8 +3,16 @@ import * as duelUserService from '../services/duelUserService.js'
 
 export async function findAllGivenId(_req: Request, res: Response){
   const {userId} = res.locals
-  const duels = await duelUserService.findAllGivenId(userId)
-  res.send(duels)
+  const {
+    duelsUpcoming,
+    duelsLost,
+    duelsWon
+} = await duelUserService.findAllGivenId(userId)
+  res.send({
+    duelsUpcoming,
+    duelsLost,
+    duelsWon
+})
 }
 export async function findAll(_req: Request, res: Response){
   const duels = await duelUserService.findAll()

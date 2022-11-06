@@ -93,7 +93,8 @@ export async function getDataResultMatch(req: Request, res: Response) {
 export async function getDataTournament(req: Request, res: Response) {
   const response = await axios.get(
     `
-    https://api.pandascore.co/lol/tournaments?filter[tier]=s,a`,
+
+    https://api.pandascore.co/csgo/tournaments?filter[tier]=s`,
     createConfig(process.env.MY_API_KEY)
   )
   
@@ -163,6 +164,8 @@ async function getDataResult() {
     openDuels.forEach(async (duel) => {
       const amount = duel.duelUser.reduce((total, acc) => total + acc.bet, 0)
       const winner = duel.duelUser.find((duelist) => duelist.teamId === id)
+      console.log(winner)
+      console.log(amount)
       await duelsRepository.update(winner.userId, amount)
     })
   }
